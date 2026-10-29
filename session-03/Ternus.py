@@ -10,6 +10,12 @@ experiment = xpy.design.Experiment(name=config.EXPERIMENT_NAME, background_colou
 experiment.data_variable_names = ["condition", "trial", "isi_ms", "frame_ms", "response", "group_response", "key", "rt_ms"]
 xpy.control.initialize(experiment)
 
+# How each response key is coded in the data: key -> (response label, number)
+RESPONSES = {
+    xpy.misc.constants.K_LEFT: ("element", 0),
+    xpy.misc.constants.K_RIGHT: ("group", 1),
+}
+
 #helper function for building blocks
 def create_block(condition):
     """Build one shuffled block: each ISI in config.ISI_VALUES_MS, TRIALS_PER_ISI times."""
@@ -119,14 +125,12 @@ for block in experiment.blocks:
 
         # Response collection
         response_prompt_screen.present()
-        key, rt_ms = experiment.keyboard.wait(keys=[xpy.misc.constants.K_LEFT, xpy.misc.constants.K_RIGHT])
+        key, rt_ms = experiment.keyboard.wait(keys=list(RESPONSES))
 
-        if key == xpy.misc.constants.K_LEFT:
-            response_label = "element"
-            group_response = 0
-        else:
-            response_label = "group"
-            group_response = 1
+        # Stop instead of saving a wrong row if anything other than LEFT/RIGHT comes back
+        if key not in RESPONSES:
+            raise ValueError(f"Unexpected response {key!r} on trial {trial_number}: expected LEFT or RIGHT")
+        response_label, group_response = RESPONSES[key]
 
         # Intertrial interval
         blank_screen.present()
