@@ -5,10 +5,23 @@ import config
 
 #isi = interstimulus interval
 
+
 # Experiment initialization
 experiment = xpy.design.Experiment(name=config.EXPERIMENT_NAME, background_colour=config.BACKGROUND_COLOUR, foreground_colour=config.FOREGROUND_COLOUR)
 experiment.data_variable_names = ["condition", "trial", "isi_ms", "frame_ms", "response", "group_response", "key", "rt_ms"]
 xpy.control.initialize(experiment)
+
+#helper function for building blocks
+def create_block(condition):
+    """Build one shuffled block: every ISI in config.ISI_VALUES_MS, TRIALS_PER_ISI times each."""
+    block = xpy.design.Block(name=condition)
+    block.set_factor("condition", condition)
+    block.add_trials_full_factorial({"isi_ms": config.ISI_VALUES_MS},
+                                    copies=config.TRIALS_PER_ISI)
+    block.shuffle_trials()
+    return block
+
+
 
 # DOTS stimuli
 dots_first_image = xpy.stimuli.Canvas(size=config.IMAGE_SIZE, colour=config.BACKGROUND_COLOUR)
@@ -59,17 +72,11 @@ response_prompt_screen.preload()
 blank_screen.preload()
 
 # DOTS block and trial construction
-dots_block = xpy.design.Block(name="DOTS")
-dots_block.set_factor("condition", "DOTS")
-dots_block.add_trials_full_factorial({"isi_ms": config.ISI_VALUES_MS},
-                                     copies=config.TRIALS_PER_ISI)
+dots_block = create_block("DOTS")
 # Randomization of DOTS trials
 dots_block.shuffle_trials()
 # SHAPES block and trial construction
-shapes_block = xpy.design.Block(name="SHAPES")
-shapes_block.set_factor("condition", "SHAPES")
-shapes_block.add_trials_full_factorial({"isi_ms": config.ISI_VALUES_MS},
-                                     copies=config.TRIALS_PER_ISI)
+shapes_block = create_block("SHAPES")
 
 # Randomization of SHAPES trials, can be done with the built in shuffle fucntipn
 shapes_block.shuffle_trials()
