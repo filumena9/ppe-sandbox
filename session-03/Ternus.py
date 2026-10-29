@@ -3,6 +3,8 @@ import expyriment as xpy
 
 import config
 
+#isi = interstimulus interval
+
 # Experiment initialization
 experiment = xpy.design.Experiment(name=config.EXPERIMENT_NAME, background_colour=config.BACKGROUND_COLOUR, foreground_colour=config.FOREGROUND_COLOUR)
 experiment.data_variable_names = ["condition", "trial", "isi_ms", "frame_ms", "response", "group_response", "key", "rt_ms"]
@@ -59,11 +61,8 @@ blank_screen.preload()
 # DOTS block and trial construction
 dots_block = xpy.design.Block(name="DOTS")
 dots_block.set_factor("condition", "DOTS")
-for isi_ms in [0, 0, 0, 0, 0, 50, 50, 50, 50, 50, 500, 500, 500, 500, 500, 1000, 1000, 1000, 1000, 1000]:
-    trial = xpy.design.Trial()
-    trial.set_factor("isi_ms", isi_ms)
-    dots_block.add_trial(trial)
-
+dots_block.add_trials_full_factorial({"isi_ms": config.ISI_VALUES_MS},
+                                     copies=config.TRIALS_PER_ISI)
 # Randomization of DOTS trials
 for index in range(len(dots_block.trials) - 1, 0, -1):
     swap_index = random.randint(0, index)
@@ -72,10 +71,8 @@ for index in range(len(dots_block.trials) - 1, 0, -1):
 # SHAPES block and trial construction
 shapes_block = xpy.design.Block(name="SHAPES")
 shapes_block.set_factor("condition", "SHAPES")
-for isi_ms in [0, 0, 0, 0, 0, 50, 50, 50, 50, 50, 500, 500, 500, 500, 500, 1000, 1000, 1000, 1000, 1000]:
-    trial = xpy.design.Trial()
-    trial.set_factor("isi_ms", isi_ms)
-    shapes_block.add_trial(trial)
+shapes_block.add_trials_full_factorial({"isi_ms": config.ISI_VALUES_MS},
+                                     copies=config.TRIALS_PER_ISI)
 
 # Randomization of SHAPES trials
 for index in range(len(shapes_block.trials) - 1, 0, -1):

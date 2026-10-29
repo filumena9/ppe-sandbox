@@ -38,3 +38,7 @@ INTERTRIAL_INTERVAL_MS = 500
 #iteration limit for the for loop, how many times are the images shown as a pair
 #on each trial
 N_IMAGE_PAIRS = 3
+
+#hard coded data is also moved here to avoid unnecessary for loops
+ISI_VALUES_MS = [0, 50, 500, 1000]
+TRIALS_PER_ISI = 5
