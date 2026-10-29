@@ -13,6 +13,7 @@ xpy.control.initialize(experiment)
 
 #helper function for building blocks
 def create_block(condition):
+    """Build one shuffled block: each ISI in config.ISI_VALUES_MS, TRIALS_PER_ISI times."""
     
     block = xpy.design.Block(name=condition)
     block.set_factor("condition", condition)
