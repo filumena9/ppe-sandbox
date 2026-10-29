@@ -1,41 +1,42 @@
 import random
 import expyriment as xpy
 
+import config
+
 # Experiment initialization
-experiment = xpy.design.Experiment(name="Ternus experiment", background_colour=(0, 0, 0), foreground_colour=(255, 255, 255))
+experiment = xpy.design.Experiment(name=config.EXPERIMENT_NAME, background_colour=config.BACKGROUND_COLOUR, foreground_colour=config.FOREGROUND_COLOUR)
 experiment.data_variable_names = ["condition", "trial", "isi_ms", "frame_ms", "response", "group_response", "key", "rt_ms"]
 xpy.control.initialize(experiment)
 
 # DOTS stimuli
-list1 = []
-dots_first_image = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
-xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(dots_first_image)
-xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(dots_first_image)
-xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(dots_first_image)
+dots_first_image = xpy.stimuli.Canvas(size=config.IMAGE_SIZE, colour=config.BACKGROUND_COLOUR)
+xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_LEFT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(dots_first_image)
+xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_CENTER_LEFT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(dots_first_image)
+xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_CENTER_RIGHT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(dots_first_image)
 
-dots_second_image = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
-xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(dots_second_image)
-xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(dots_second_image)
-xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(dots_second_image)
+dots_second_image = xpy.stimuli.Canvas(size=config.IMAGE_SIZE, colour=config.BACKGROUND_COLOUR)
+xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_CENTER_LEFT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(dots_second_image)
+xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_CENTER_RIGHT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(dots_second_image)
+xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_RIGHT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(dots_second_image)
 
 # SHAPES stimuli
-shapes_first_image = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
-xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(shapes_first_image)
-xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(shapes_first_image)
-xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(shapes_first_image)
+shapes_first_image = xpy.stimuli.Canvas(size=config.IMAGE_SIZE, colour=config.BACKGROUND_COLOUR)
+xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_LEFT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(shapes_first_image)
+xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, config.TRIANGLE_RADIUS), position=(config.X_CENTER_LEFT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(shapes_first_image)
+xpy.stimuli.Rectangle(size=config.SQUARE_SIZE, position=(config.X_CENTER_RIGHT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(shapes_first_image)
 
-shapes_second_image = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
-xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(shapes_second_image)
-xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(shapes_second_image)
-xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(shapes_second_image)
+shapes_second_image = xpy.stimuli.Canvas(size=config.IMAGE_SIZE, colour=config.BACKGROUND_COLOUR)
+xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, config.TRIANGLE_RADIUS), position=(config.X_CENTER_LEFT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(shapes_second_image)
+xpy.stimuli.Rectangle(size=config.SQUARE_SIZE, position=(config.X_CENTER_RIGHT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(shapes_second_image)
+xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_RIGHT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(shapes_second_image)
 
 # Fixation cross and text screens
-fixation_cross = xpy.stimuli.FixCross(size=(20, 20), line_width=4, colour=(255, 255, 255))
-fixation_screen = xpy.stimuli.BlankScreen(colour=(0, 0, 0))
+fixation_cross = xpy.stimuli.FixCross(size=config.FIXATION_SIZE, line_width=config.FIXATION_LINE_WIDTH, colour=config.FOREGROUND_COLOUR)
+fixation_screen = xpy.stimuli.BlankScreen(colour=config.BACKGROUND_COLOUR)
 fixation_cross.plot(fixation_screen)
 instructions_screen = xpy.stimuli.TextScreen(heading="Ternus experiment", text="Keep your eyes on the central cross.\n\nLEFT = element motion\nRIGHT = group motion\n\nPress SPACE to start.")
 response_prompt_screen = xpy.stimuli.TextScreen(heading="What did you see?", text="LEFT = element motion\nRIGHT = group motion")
-blank_screen = xpy.stimuli.BlankScreen(colour=(0, 0, 0))
+blank_screen = xpy.stimuli.BlankScreen(colour=config.BACKGROUND_COLOUR)
 
 # Fixation on stimulus and text screens
 fixation_cross.plot(dots_first_image)
@@ -117,17 +118,17 @@ for block in experiment.blocks:
     for trial in block.trials:
         isi_ms = trial.get_factor("isi_ms")
         trial.stimuli[2].present()
-        experiment.clock.wait(200)
+        experiment.clock.wait(config.FIXATION_BEFORE_TRIAL_MS)
 
-        for repetition in range(3):
+        for repetition in range(config.N_IMAGE_PAIRS):
             trial.stimuli[0].present()
-            experiment.clock.wait(250)
+            experiment.clock.wait(config.IMAGE_DURATION_MS)
             if isi_ms > 0:
                 trial.stimuli[4].present()
                 experiment.clock.wait(isi_ms)
 
             trial.stimuli[1].present()
-            experiment.clock.wait(250)
+            experiment.clock.wait(config.IMAGE_DURATION_MS)
             if isi_ms > 0:
                 trial.stimuli[4].present()
                 experiment.clock.wait(isi_ms)
@@ -145,9 +146,9 @@ for block in experiment.blocks:
 
         # Intertrial interval
         trial.stimuli[5].present()
-        experiment.clock.wait(500)
+        experiment.clock.wait(config.INTERTRIAL_INTERVAL_MS)
         # Data saving
-        experiment.data.add([block.get_factor("condition"), trial.id, isi_ms, 250, response_label, group_response, key, rt_ms])
+        experiment.data.add([block.get_factor("condition"), trial.id, isi_ms, config.IMAGE_DURATION_MS, response_label, group_response, key, rt_ms])
         experiment.data.save()
 
 # Experiment end
