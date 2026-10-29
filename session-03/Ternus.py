@@ -124,12 +124,12 @@ for block in experiment.blocks:
                 experiment.clock.wait(isi_ms)
 
         # Response collection
-        response_prompt_screen.present()
-        key, rt_ms = experiment.keyboard.wait(keys=list(RESPONSES))
-
-        # Stop instead of saving a wrong row if anything other than LEFT/RIGHT comes back
-        if key not in RESPONSES:
-            raise ValueError(f"Unexpected response {key!r} on trial {trial_number}: expected LEFT or RIGHT")
+        # Pressing Esc and answering "n" to the quit question ends the wait without a key.
+        # Show the prompt again until LEFT or RIGHT is pressed, so no row is saved without a response.
+        key = None
+        while key not in RESPONSES:
+            response_prompt_screen.present()
+            key, rt_ms = experiment.keyboard.wait(keys=list(RESPONSES))
         response_label, group_response = RESPONSES[key]
 
         # Intertrial interval
