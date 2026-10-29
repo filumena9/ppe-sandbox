@@ -95,9 +95,11 @@ instructions_screen.present()
 experiment.keyboard.wait(keys=[xpy.misc.constants.K_SPACE])
 
 # Trial presentation
+trial_number = 0  # position in the whole run (1-40), in the order the trials are shown
 for block in experiment.blocks:
     first_image, second_image = images[block.get_factor("condition")]
     for trial in block.trials:
+        trial_number += 1
         isi_ms = trial.get_factor("isi_ms")
         fixation_screen.present()
         experiment.clock.wait(config.FIXATION_BEFORE_TRIAL_MS)
@@ -130,7 +132,7 @@ for block in experiment.blocks:
         blank_screen.present()
         experiment.clock.wait(config.INTERTRIAL_INTERVAL_MS)
         # Data saving
-        experiment.data.add([block.get_factor("condition"), trial.id, isi_ms, config.IMAGE_DURATION_MS, response_label, group_response, key, rt_ms])
+        experiment.data.add([block.get_factor("condition"), trial_number, isi_ms, config.IMAGE_DURATION_MS, response_label, group_response, key, rt_ms])
         experiment.data.save()
 
 # Experiment end
