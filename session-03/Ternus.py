@@ -75,23 +75,11 @@ dots_block = create_block("DOTS")
 shapes_block = create_block("SHAPES")
 
 
-# Stimuli for DOTS trials
-for trial in dots_block.trials:
-    trial.add_stimulus(dots_first_image)
-    trial.add_stimulus(dots_second_image)
-    trial.add_stimulus(fixation_screen)
-    trial.add_stimulus(response_prompt_screen)
-    trial.add_stimulus(fixation_screen)
-    trial.add_stimulus(blank_screen)
-
-# Stimuli for SHAPES trials
-for trial in shapes_block.trials:
-    trial.add_stimulus(shapes_first_image)
-    trial.add_stimulus(shapes_second_image)
-    trial.add_stimulus(fixation_screen)
-    trial.add_stimulus(response_prompt_screen)
-    trial.add_stimulus(fixation_screen)
-    trial.add_stimulus(blank_screen)
+#The two images that belong to each condition
+images = {
+    "DOTS": (dots_first_image, dots_second_image),
+    "SHAPES": (shapes_first_image, shapes_second_image),
+}
 
 # Experiment start
 experiment.add_block(dots_block)
@@ -108,26 +96,27 @@ experiment.keyboard.wait(keys=[xpy.misc.constants.K_SPACE])
 
 # Trial presentation
 for block in experiment.blocks:
+    first_image, second_image = images[block.get_factor("condition")]
     for trial in block.trials:
         isi_ms = trial.get_factor("isi_ms")
-        trial.stimuli[2].present()
+        fixation_screen.present()
         experiment.clock.wait(config.FIXATION_BEFORE_TRIAL_MS)
 
         for repetition in range(config.N_IMAGE_PAIRS):
-            trial.stimuli[0].present()
+            first_image.present()
             experiment.clock.wait(config.IMAGE_DURATION_MS)
             if isi_ms > 0:
-                trial.stimuli[4].present()
+                fixation_screen.present()
                 experiment.clock.wait(isi_ms)
 
-            trial.stimuli[1].present()
+            second_image.present()
             experiment.clock.wait(config.IMAGE_DURATION_MS)
             if isi_ms > 0:
-                trial.stimuli[4].present()
+                fixation_screen.present()
                 experiment.clock.wait(isi_ms)
 
         # Response collection
-        trial.stimuli[3].present()
+        response_prompt_screen.present()
         key, rt_ms = experiment.keyboard.wait(keys=[xpy.misc.constants.K_LEFT, xpy.misc.constants.K_RIGHT])
 
         if key == xpy.misc.constants.K_LEFT:
@@ -138,7 +127,7 @@ for block in experiment.blocks:
             group_response = 1
 
         # Intertrial interval
-        trial.stimuli[5].present()
+        blank_screen.present()
         experiment.clock.wait(config.INTERTRIAL_INTERVAL_MS)
         # Data saving
         experiment.data.add([block.get_factor("condition"), trial.id, isi_ms, config.IMAGE_DURATION_MS, response_label, group_response, key, rt_ms])
