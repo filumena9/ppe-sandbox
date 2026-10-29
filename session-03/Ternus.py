@@ -64,20 +64,15 @@ dots_block.set_factor("condition", "DOTS")
 dots_block.add_trials_full_factorial({"isi_ms": config.ISI_VALUES_MS},
                                      copies=config.TRIALS_PER_ISI)
 # Randomization of DOTS trials
-for index in range(len(dots_block.trials) - 1, 0, -1):
-    swap_index = random.randint(0, index)
-    dots_block.trials[index], dots_block.trials[swap_index] = dots_block.trials[swap_index], dots_block.trials[index]
-
+dots_block.shuffle_trials()
 # SHAPES block and trial construction
 shapes_block = xpy.design.Block(name="SHAPES")
 shapes_block.set_factor("condition", "SHAPES")
 shapes_block.add_trials_full_factorial({"isi_ms": config.ISI_VALUES_MS},
                                      copies=config.TRIALS_PER_ISI)
 
-# Randomization of SHAPES trials
-for index in range(len(shapes_block.trials) - 1, 0, -1):
-    swap_index = random.randint(0, index)
-    shapes_block.trials[index], shapes_block.trials[swap_index] = shapes_block.trials[swap_index], shapes_block.trials[index]
+# Randomization of SHAPES trials, can be done with the built in shuffle fucntipn
+shapes_block.shuffle_trials()
 
 # Stimuli for DOTS trials
 for trial in dots_block.trials:
