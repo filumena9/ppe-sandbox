@@ -1,4 +1,3 @@
-import random
 import expyriment as xpy
 
 import config
@@ -21,8 +20,6 @@ def create_block(condition):
                                     copies=config.TRIALS_PER_ISI)
     block.shuffle_trials()
     return block
-
-
 
 # DOTS stimuli
 dots_first_image = xpy.stimuli.Canvas(size=config.IMAGE_SIZE, colour=config.BACKGROUND_COLOUR)
@@ -72,15 +69,11 @@ instructions_screen.preload()
 response_prompt_screen.preload()
 blank_screen.preload()
 
-# DOTS block and trial construction
+# DOTS block and trial construction AND SHUFFLE
 dots_block = create_block("DOTS")
-# Randomization of DOTS trials
-dots_block.shuffle_trials()
 # SHAPES block and trial construction
 shapes_block = create_block("SHAPES")
 
-# Randomization of SHAPES trials, can be done with the built in shuffle fucntipn
-shapes_block.shuffle_trials()
 
 # Stimuli for DOTS trials
 for trial in dots_block.trials:
