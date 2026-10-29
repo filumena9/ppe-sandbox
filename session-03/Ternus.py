@@ -8,26 +8,26 @@ xpy.control.initialize(experiment)
 
 # DOTS stimuli
 list1 = []
-dots_frame_a = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
-xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(dots_frame_a)
-xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(dots_frame_a)
-xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(dots_frame_a)
+dots_first_image = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
+xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(dots_first_image)
+xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(dots_first_image)
+xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(dots_first_image)
 
-dots_frame_b = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
-xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(dots_frame_b)
-xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(dots_frame_b)
-xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(dots_frame_b)
+dots_second_image = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
+xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(dots_second_image)
+xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(dots_second_image)
+xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(dots_second_image)
 
 # SHAPES stimuli
-shapes_frame_a = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
-xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(shapes_frame_a)
-xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(shapes_frame_a)
-xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(shapes_frame_a)
+shapes_first_image = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
+xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(shapes_first_image)
+xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(shapes_first_image)
+xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(shapes_first_image)
 
-shapes_frame_b = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
-xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(shapes_frame_b)
-xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(shapes_frame_b)
-xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(shapes_frame_b)
+shapes_second_image = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
+xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(shapes_second_image)
+xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(shapes_second_image)
+xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(shapes_second_image)
 
 # Fixation cross and text screens
 fixation_cross = xpy.stimuli.FixCross(size=(20, 20), line_width=4, colour=(255, 255, 255))
@@ -38,18 +38,18 @@ response_prompt_screen = xpy.stimuli.TextScreen(heading="What did you see?", tex
 blank_screen = xpy.stimuli.BlankScreen(colour=(0, 0, 0))
 
 # Fixation on stimulus and text screens
-fixation_cross.plot(dots_frame_a)
-fixation_cross.plot(dots_frame_b)
-fixation_cross.plot(shapes_frame_a)
-fixation_cross.plot(shapes_frame_b)
+fixation_cross.plot(dots_first_image)
+fixation_cross.plot(dots_second_image)
+fixation_cross.plot(shapes_first_image)
+fixation_cross.plot(shapes_second_image)
 fixation_cross.plot(instructions_screen)
 fixation_cross.plot(response_prompt_screen)
 
 # Preloading
-dots_frame_a.preload()
-dots_frame_b.preload()
-shapes_frame_a.preload()
-shapes_frame_b.preload()
+dots_first_image.preload()
+dots_second_image.preload()
+shapes_first_image.preload()
+shapes_second_image.preload()
 fixation_screen.preload()
 instructions_screen.preload()
 response_prompt_screen.preload()
@@ -83,8 +83,8 @@ for index in range(len(shapes_block.trials) - 1, 0, -1):
 
 # Stimuli for DOTS trials
 for trial in dots_block.trials:
-    trial.add_stimulus(dots_frame_a)
-    trial.add_stimulus(dots_frame_b)
+    trial.add_stimulus(dots_first_image)
+    trial.add_stimulus(dots_second_image)
     trial.add_stimulus(fixation_screen)
     trial.add_stimulus(response_prompt_screen)
     trial.add_stimulus(fixation_screen)
@@ -92,8 +92,8 @@ for trial in dots_block.trials:
 
 # Stimuli for SHAPES trials
 for trial in shapes_block.trials:
-    trial.add_stimulus(shapes_frame_a)
-    trial.add_stimulus(shapes_frame_b)
+    trial.add_stimulus(shapes_first_image)
+    trial.add_stimulus(shapes_second_image)
     trial.add_stimulus(fixation_screen)
     trial.add_stimulus(response_prompt_screen)
     trial.add_stimulus(fixation_screen)
