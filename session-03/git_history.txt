@@ -1576,3 +1576,44 @@ index 0000000..3d0840a
 +10,DOTS,38,500,250,group,1,1073741903,468
 +10,DOTS,39,500,250,group,1,1073741903,457
 +10,DOTS,40,1000,250,group,1,1073741903,484
+
+commit bc47b86f24c0b202aca66edba45ff19b40fe1f53
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Tue Nov 3 20:54:17 2026 +0100
+
+    Add final report
+---
+ session-03/report.txt | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/session-03/report.txt b/session-03/report.txt
+new file mode 100644
+index 0000000..02d20ca
+--- /dev/null
++++ b/session-03/report.txt
+@@ -0,0 +1,24 @@
++I made small, separate commits so the changes can be followed 
++in git_history.txt (Roth et al., Principle 2). 
++
++I also renamed objects such as screen1–6 to more descriptive names, such as dots_first_image
++and fixation_screen, to connect the code to Auxiliary.txt (Principle 4).
++
++Following Principle 4, I moved colours, positions, durations, image-pair count, 
++ISI values and trial count into config.py, as in Session 2. Previously, the 250 ms 
++image duration appeared in both the presentation loop and saved frame_ms, while the ISI 
++list was written twice. Now each setting is changed in one place, so the experiment and 
++saved data stay consistent.
++
++I used Expyriment’s existing functions, add_trials_full_factorial and shuffle_trials, 
++instead of writing the logic manually (Principle 1). Together with one create_block function,
++this avoids repetition (Principle 4) and defines the design as 4 ISIs × 5 trials per ISI 
++(20 trials per block).
++
++In the original data, the trial column showed creation order rather than shuffled 
++presentation order. I also found that a missing response, for example after pressing Esc 
++and choosing not to quit, was recorded as “group”. I fixed this with a running trial number, a 
++RESPONSES table and by showing the prompt again. Finally, check_data.py tests 40 rows, five trials per ISI, block order and response coding (LEFT = element/0; RIGHT = group/1), following Principle 5. It checks the saved file, not what appeared on screen.
++
++In my experience this was useful: even with a computer science background I forget these 
++principles, so it was good to refresh them.
+\ No newline at end of file
