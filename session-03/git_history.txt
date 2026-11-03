@@ -1,0 +1,1578 @@
+commit 7d63ed6536a1ea6c446cbf18da508fe902b5a59a
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Thu Oct 29 16:26:23 2026 +0100
+
+    Documents set up
+---
+ session-03/Auxiliary.txt |  79 ++++++++++++++++++++++++
+ session-03/Ternus.py     | 154 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 233 insertions(+)
+
+diff --git a/session-03/Auxiliary.txt b/session-03/Auxiliary.txt
+new file mode 100644
+index 0000000..35957e2
+--- /dev/null
++++ b/session-03/Auxiliary.txt
+@@ -0,0 +1,79 @@
++WHAT THIS EXPERIMENT DOES
++
++The program shows the Ternus illusion. Two static images, three items each, alternate on screen. The second image is shifted sideways by one item position, so two positions overlap between the images. Nothing in either image moves, but when they follow one another you may see illusory movement. Some people see all three items travel together, which is called group motion. Others see two items stay put while the outer one jumps from side to side, which is called element motion. We record what the observer reports. There is no correct answer.
++
++There are two stimulus conditions. In DOTS the three items are identical white circles. In SHAPES they are a circle, a triangle and a square. Within a SHAPES sequence the triangle and the square keep their identities at the two overlapping positions, and the circle sits at the opposite ends. Those shapes give extra information about which item in one image aligns with which item in the next. Comparing DOTS and SHAPES therefore lets us ask whether that information changes the illusory motion perception. The condition label only says what was shown, not what the participant should answer: a DOTS trial can get either response (group or element motion), and so can a SHAPES trial.
++
++We also vary the time gap between the two images. This is the interstimulus interval, or ISI, and it takes four values: 0, 50, 500 and 1000 ms. At ISI 0 the second image replaces the first straight away. At any positive ISI the items disappear for that long and only the fixation cross stays on screen. Two stimulus types at four intervals gives eight combinations. The interval can change what you perceive, so report what you actually see rather than trying to produce a particular result.
++
++The experiment has two blocks, one for DOTS and one for SHAPES, 20 trials each, with five trials at every ISI. A full run is 40 trials and should write 40 rows in the data file. Trials are shuffled inside each block. Block order follows the participant number: odd numbers get DOTS first, even numbers get SHAPES first. That way both orders are spread across participants, so the difference between conditions is less tangled up with which one happened to come first. For your final run you will be your own participant.
++
++HOW TO APPROACH THE WORK
++
++Use the Python environment from class, and run the original before you change anything. Watch the display, try both response keys, and locate the data file it writes. That first run gives you something concrete to compare later versions against. Read the code and the paper from Roth et al., looking for places where its recommendations would help this particular program.
++
++Start Git before editing so the original is part of your history. Begin with names. Work out what each object and value stands for, choose names that say what that role is, update every place the old name was used, and run the program again. Commit that checked change. 
++
++Next, gather the experimental parameters together and drop code you don't use. Colors, positions, durations and trial counts should all be easy to find. Ask yourself what would happen if you wanted to change one duration: would you be hunting through several copies of the same number? Try to look at what the program does by hand. Replace each with the Expyriment method that does the job. Commit each meaningful replacement so I can follow your reasoning.
++
++While you develop you can run shorter versions of the blocks (less trials, just to test the code). Before the final run, put it back to 20 trials per block, five per ISI in each condition. Keep the scientific design of the experiment.
++
++THE FINAL RUN AND WHAT TO SEND
++
++Once the improved code works, do one full 40-trial run on yourself. Answer according to what you see. Keep that run's data file apart from your earlier tests so you send the right one.
++
++Open the final .xpd file and look at the trial data. You should find 40 completed rows: 20 DOTS and 20 SHAPES, with five rows at each ISI inside each condition. LEFT should be stored as element and 0; RIGHT as group and 1. Check that the saved condition and ISI match the trial that was actually shown.
++
++Submit your final Python files, the .xpd file from that complete run, git_history.txt, and one paragraph of no more than 20 lines. Use the paragraph to justify at least two or three of the changes that you have done. Point to the relevant principles from Roth et al., what we discussed in class, and your own experience where it helps. Say why those choices make the experiment easier to understand, modify or check. Keep the focus on the decisions you made in this code, not on summarizing the paper.
++
++USING GIT LOCALLY AND OFFLINE
++
++Git records versions of your project on your own computer. Saving a file in your editor changes the working copy; a commit records a checkpoint you can inspect later. The commands below need Git installed, but nothing else: no internet connection, no GitHub account, no online repository. Open a terminal in the folder that holds Ternus.py.
++
++Before editing, record the original code:
++
++git init
++git add Ternus.py
++git commit -m "Save original Ternus code"
++
++If Git asks who you are, set an identity for this repository with git config user.name "Your name" and git config user.email "your@email.example", replacing the examples, then repeat the commit.
++
++For example, once you have renamed variables, run the script and look over the changes. If it checks out, record the step:
++
++python Ternus.py
++git diff
++git add Ternus.py
++git commit -m "Rename stimulus and response variables"
++
++git diff shows edits you haven't staged yet. git add selects a file version for the next commit. git commit records that version under your message. A message should say what changed; "Organize timing parameters" or "Replace manual trial construction" tells me more than "Changes". Repeat the same routine after each meaningful change. When you add another Python file, list its real filename in git add.
++
++At the end, commit any last code changes, then export the history:
++
++git log --reverse --stat -p > git_history.txt
++
++This creates git_history.txt, which shows the commits from first to last with the code changes in each one. Send it with your work. One big final commit won't show the development process, so make your checkpoints while you are working.
++
++GLOSSARY
++
++Preloading: prepares stimuli ahead of presentation.
++Trial: one stimulus-response episode. Expyriment's Trial object holds the factors and stimuli.
++Block: a group of trials. Here each block holds either the DOTS trials or the SHAPES trials.
++Factor / level: a factor is a manipulated variable and a level is one of its values. Together they define the comparisons.
++Experimental condition: one combination of factor levels. Here each stimulus type is tested at each ISI.
++Full factorial: every combination of the chosen factor levels, so all the planned combinations get included.
++Randomization: varies trial order at random, which weakens systematic links between condition and trial position.
++Counterbalancing: spreads condition orders across participants, so order effects don't pile onto one condition.
++Balanced Latin square: orders that balance positions and immediate predecessors. With two blocks, that means AB and BA.
++ISI: the gap between the two stimulus frames. Changing it can change the perceived motion.
++Intertrial interval (ITI): the programmed pause between trials. Here a 500 ms blank separates successive episodes.
++Fixation cross: gives the eye a common place to look, which keeps viewing behavior consistent.
++Refresh rate: screen refreshes per second. At 60 Hz successive refreshes are about 16.7 ms apart, which constrains visual timing.
++Response coding: turns keys into labels and numbers. Consistent coding connects the action to the saved observation.
++Element / group motion: one item appearing to jump versus all of them moving together. These are the two percepts you report.
++Response time: elapsed time from a defined start to the response. Here it starts when the response prompt appears.
++Data / event files: .xpd holds the trial rows you add; event files log software events so you can inspect execution.
++Pilot: a short test of the procedure, checking presentation, responses and saving before real data collection.
++Refactoring: changing code structure while behavior stays the same, which makes later changes and checks easier.
++Git repository: the local project history kept in .git, which lets you inspect and recover committed versions.
++Staging / commit: staging picks file versions and a commit records them. Together they make a checkpoint.
++Diff / log: diff shows changes and log lists commits. Both make the development visible.
+\ No newline at end of file
+diff --git a/session-03/Ternus.py b/session-03/Ternus.py
+new file mode 100644
+index 0000000..2b9d96b
+--- /dev/null
++++ b/session-03/Ternus.py
+@@ -0,0 +1,154 @@
++import random
++import expyriment as xpy
++
++# Experiment initialization
++e = xpy.design.Experiment(name="Ternus experiment", background_colour=(0, 0, 0), foreground_colour=(255, 255, 255))
++e.data_variable_names = ["condition", "trial", "isi_ms", "frame_ms", "response", "group_response", "key", "rt_ms"]
++xpy.control.initialize(e)
++
++# DOTS stimuli
++list1 = []
++screen1 = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
++xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(screen1)
++xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(screen1)
++xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(screen1)
++
++screen2 = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
++xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(screen2)
++xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(screen2)
++xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(screen2)
++
++# SHAPES stimuli
++screen3 = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
++xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(screen3)
++xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(screen3)
++xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(screen3)
++
++screen4 = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
++xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(screen4)
++xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(screen4)
++xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(screen4)
++
++# Fixation cross and text screens
++thing1 = xpy.stimuli.FixCross(size=(20, 20), line_width=4, colour=(255, 255, 255))
++screen5 = xpy.stimuli.BlankScreen(colour=(0, 0, 0))
++thing1.plot(screen5)
++text1 = xpy.stimuli.TextScreen(heading="Ternus experiment", text="Keep your eyes on the central cross.\n\nLEFT = element motion\nRIGHT = group motion\n\nPress SPACE to start.")
++text2 = xpy.stimuli.TextScreen(heading="What did you see?", text="LEFT = element motion\nRIGHT = group motion")
++screen6 = xpy.stimuli.BlankScreen(colour=(0, 0, 0))
++
++# Fixation on stimulus and text screens
++thing1.plot(screen1)
++thing1.plot(screen2)
++thing1.plot(screen3)
++thing1.plot(screen4)
++thing1.plot(text1)
++thing1.plot(text2)
++
++# Preloading
++screen1.preload()
++screen2.preload()
++screen3.preload()
++screen4.preload()
++screen5.preload()
++text1.preload()
++text2.preload()
++screen6.preload()
++
++# DOTS block and trial construction
++b1 = xpy.design.Block(name="DOTS")
++b1.set_factor("condition", "DOTS")
++for v in [0, 0, 0, 0, 0, 50, 50, 50, 50, 50, 500, 500, 500, 500, 500, 1000, 1000, 1000, 1000, 1000]:
++    t = xpy.design.Trial()
++    t.set_factor("isi_ms", v)
++    b1.add_trial(t)
++
++# Randomization of DOTS trials
++for i in range(len(b1.trials) - 1, 0, -1):
++    j = random.randint(0, i)
++    b1.trials[i], b1.trials[j] = b1.trials[j], b1.trials[i]
++
++# SHAPES block and trial construction
++b2 = xpy.design.Block(name="SHAPES")
++b2.set_factor("condition", "SHAPES")
++for v in [0, 0, 0, 0, 0, 50, 50, 50, 50, 50, 500, 500, 500, 500, 500, 1000, 1000, 1000, 1000, 1000]:
++    t = xpy.design.Trial()
++    t.set_factor("isi_ms", v)
++    b2.add_trial(t)
++
++# Randomization of SHAPES trials
++for i in range(len(b2.trials) - 1, 0, -1):
++    j = random.randint(0, i)
++    b2.trials[i], b2.trials[j] = b2.trials[j], b2.trials[i]
++
++# Stimuli for DOTS trials
++for t in b1.trials:
++    t.add_stimulus(screen1)
++    t.add_stimulus(screen2)
++    t.add_stimulus(screen5)
++    t.add_stimulus(text2)
++    t.add_stimulus(screen5)
++    t.add_stimulus(screen6)
++
++# Stimuli for SHAPES trials
++for t in b2.trials:
++    t.add_stimulus(screen3)
++    t.add_stimulus(screen4)
++    t.add_stimulus(screen5)
++    t.add_stimulus(text2)
++    t.add_stimulus(screen5)
++    t.add_stimulus(screen6)
++
++# Experiment start
++e.add_block(b1)
++e.add_block(b2)
++xpy.control.start(skip_ready_screen=True)
++
++# Counterbalancing
++if e.subject % 2 == 0:
++    e.blocks.reverse()
++
++# Instructions
++text1.present()
++e.keyboard.wait(keys=[xpy.misc.constants.K_SPACE])
++
++# Trial presentation
++for b in e.blocks:
++    for t in b.trials:
++        v = t.get_factor("isi_ms")
++        t.stimuli[2].present()
++        e.clock.wait(200)
++
++        for i in range(3):
++            t.stimuli[0].present()
++            e.clock.wait(250)
++            if v > 0:
++                t.stimuli[4].present()
++                e.clock.wait(v)
++
++            t.stimuli[1].present()
++            e.clock.wait(250)
++            if v > 0:
++                t.stimuli[4].present()
++                e.clock.wait(v)
++
++        # Response collection
++        t.stimuli[3].present()
++        k, r = e.keyboard.wait(keys=[xpy.misc.constants.K_LEFT, xpy.misc.constants.K_RIGHT])
++
++        if k == xpy.misc.constants.K_LEFT:
++            a = "element"
++            g = 0
++        else:
++            a = "group"
++            g = 1
++
++        # Intertrial interval
++        t.stimuli[5].present()
++        e.clock.wait(500)
++        # Data saving
++        e.data.add([b.get_factor("condition"), t.id, v, 250, a, g, k, r])
++        e.data.save()
++
++# Experiment end
++xpy.control.end()
+\ No newline at end of file
+
+commit f20ad6981df3dbf9b7f039395b32ab10c156db0b
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Thu Oct 29 16:41:46 2026 +0100
+
+    Rename
+---
+ session-03/Ternus.py | 306 +++++++++++++++++++++++++--------------------------
+ 1 file changed, 153 insertions(+), 153 deletions(-)
+
+diff --git a/session-03/Ternus.py b/session-03/Ternus.py
+index 2b9d96b..ed084b3 100644
+--- a/session-03/Ternus.py
++++ b/session-03/Ternus.py
+@@ -1,154 +1,154 @@
+-import random
+-import expyriment as xpy
+-
+-# Experiment initialization
+-e = xpy.design.Experiment(name="Ternus experiment", background_colour=(0, 0, 0), foreground_colour=(255, 255, 255))
+-e.data_variable_names = ["condition", "trial", "isi_ms", "frame_ms", "response", "group_response", "key", "rt_ms"]
+-xpy.control.initialize(e)
+-
+-# DOTS stimuli
+-list1 = []
+-screen1 = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
+-xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(screen1)
+-xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(screen1)
+-xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(screen1)
+-
+-screen2 = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
+-xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(screen2)
+-xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(screen2)
+-xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(screen2)
+-
+-# SHAPES stimuli
+-screen3 = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
+-xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(screen3)
+-xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(screen3)
+-xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(screen3)
+-
+-screen4 = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
+-xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(screen4)
+-xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(screen4)
+-xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(screen4)
+-
+-# Fixation cross and text screens
+-thing1 = xpy.stimuli.FixCross(size=(20, 20), line_width=4, colour=(255, 255, 255))
+-screen5 = xpy.stimuli.BlankScreen(colour=(0, 0, 0))
+-thing1.plot(screen5)
+-text1 = xpy.stimuli.TextScreen(heading="Ternus experiment", text="Keep your eyes on the central cross.\n\nLEFT = element motion\nRIGHT = group motion\n\nPress SPACE to start.")
+-text2 = xpy.stimuli.TextScreen(heading="What did you see?", text="LEFT = element motion\nRIGHT = group motion")
+-screen6 = xpy.stimuli.BlankScreen(colour=(0, 0, 0))
+-
+-# Fixation on stimulus and text screens
+-thing1.plot(screen1)
+-thing1.plot(screen2)
+-thing1.plot(screen3)
+-thing1.plot(screen4)
+-thing1.plot(text1)
+-thing1.plot(text2)
+-
+-# Preloading
+-screen1.preload()
+-screen2.preload()
+-screen3.preload()
+-screen4.preload()
+-screen5.preload()
+-text1.preload()
+-text2.preload()
+-screen6.preload()
+-
+-# DOTS block and trial construction
+-b1 = xpy.design.Block(name="DOTS")
+-b1.set_factor("condition", "DOTS")
+-for v in [0, 0, 0, 0, 0, 50, 50, 50, 50, 50, 500, 500, 500, 500, 500, 1000, 1000, 1000, 1000, 1000]:
+-    t = xpy.design.Trial()
+-    t.set_factor("isi_ms", v)
+-    b1.add_trial(t)
+-
+-# Randomization of DOTS trials
+-for i in range(len(b1.trials) - 1, 0, -1):
+-    j = random.randint(0, i)
+-    b1.trials[i], b1.trials[j] = b1.trials[j], b1.trials[i]
+-
+-# SHAPES block and trial construction
+-b2 = xpy.design.Block(name="SHAPES")
+-b2.set_factor("condition", "SHAPES")
+-for v in [0, 0, 0, 0, 0, 50, 50, 50, 50, 50, 500, 500, 500, 500, 500, 1000, 1000, 1000, 1000, 1000]:
+-    t = xpy.design.Trial()
+-    t.set_factor("isi_ms", v)
+-    b2.add_trial(t)
+-
+-# Randomization of SHAPES trials
+-for i in range(len(b2.trials) - 1, 0, -1):
+-    j = random.randint(0, i)
+-    b2.trials[i], b2.trials[j] = b2.trials[j], b2.trials[i]
+-
+-# Stimuli for DOTS trials
+-for t in b1.trials:
+-    t.add_stimulus(screen1)
+-    t.add_stimulus(screen2)
+-    t.add_stimulus(screen5)
+-    t.add_stimulus(text2)
+-    t.add_stimulus(screen5)
+-    t.add_stimulus(screen6)
+-
+-# Stimuli for SHAPES trials
+-for t in b2.trials:
+-    t.add_stimulus(screen3)
+-    t.add_stimulus(screen4)
+-    t.add_stimulus(screen5)
+-    t.add_stimulus(text2)
+-    t.add_stimulus(screen5)
+-    t.add_stimulus(screen6)
+-
+-# Experiment start
+-e.add_block(b1)
+-e.add_block(b2)
+-xpy.control.start(skip_ready_screen=True)
+-
+-# Counterbalancing
+-if e.subject % 2 == 0:
+-    e.blocks.reverse()
+-
+-# Instructions
+-text1.present()
+-e.keyboard.wait(keys=[xpy.misc.constants.K_SPACE])
+-
+-# Trial presentation
+-for b in e.blocks:
+-    for t in b.trials:
+-        v = t.get_factor("isi_ms")
+-        t.stimuli[2].present()
+-        e.clock.wait(200)
+-
+-        for i in range(3):
+-            t.stimuli[0].present()
+-            e.clock.wait(250)
+-            if v > 0:
+-                t.stimuli[4].present()
+-                e.clock.wait(v)
+-
+-            t.stimuli[1].present()
+-            e.clock.wait(250)
+-            if v > 0:
+-                t.stimuli[4].present()
+-                e.clock.wait(v)
+-
+-        # Response collection
+-        t.stimuli[3].present()
+-        k, r = e.keyboard.wait(keys=[xpy.misc.constants.K_LEFT, xpy.misc.constants.K_RIGHT])
+-
+-        if k == xpy.misc.constants.K_LEFT:
+-            a = "element"
+-            g = 0
+-        else:
+-            a = "group"
+-            g = 1
+-
+-        # Intertrial interval
+-        t.stimuli[5].present()
+-        e.clock.wait(500)
+-        # Data saving
+-        e.data.add([b.get_factor("condition"), t.id, v, 250, a, g, k, r])
+-        e.data.save()
+-
+-# Experiment end
++import random
++import expyriment as xpy
++
++# Experiment initialization
++experiment = xpy.design.Experiment(name="Ternus experiment", background_colour=(0, 0, 0), foreground_colour=(255, 255, 255))
++experiment.data_variable_names = ["condition", "trial", "isi_ms", "frame_ms", "response", "group_response", "key", "rt_ms"]
++xpy.control.initialize(experiment)
++
++# DOTS stimuli
++list1 = []
++dots_frame_a = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
++xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(dots_frame_a)
++xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(dots_frame_a)
++xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(dots_frame_a)
++
++dots_frame_b = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
++xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(dots_frame_b)
++xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(dots_frame_b)
++xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(dots_frame_b)
++
++# SHAPES stimuli
++shapes_frame_a = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
++xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(shapes_frame_a)
++xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(shapes_frame_a)
++xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(shapes_frame_a)
++
++shapes_frame_b = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
++xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(shapes_frame_b)
++xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(shapes_frame_b)
++xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(shapes_frame_b)
++
++# Fixation cross and text screens
++fixation_cross = xpy.stimuli.FixCross(size=(20, 20), line_width=4, colour=(255, 255, 255))
++fixation_screen = xpy.stimuli.BlankScreen(colour=(0, 0, 0))
++fixation_cross.plot(fixation_screen)
++instructions_screen = xpy.stimuli.TextScreen(heading="Ternus experiment", text="Keep your eyes on the central cross.\n\nLEFT = element motion\nRIGHT = group motion\n\nPress SPACE to start.")
++response_prompt_screen = xpy.stimuli.TextScreen(heading="What did you see?", text="LEFT = element motion\nRIGHT = group motion")
++blank_screen = xpy.stimuli.BlankScreen(colour=(0, 0, 0))
++
++# Fixation on stimulus and text screens
++fixation_cross.plot(dots_frame_a)
++fixation_cross.plot(dots_frame_b)
++fixation_cross.plot(shapes_frame_a)
++fixation_cross.plot(shapes_frame_b)
++fixation_cross.plot(instructions_screen)
++fixation_cross.plot(response_prompt_screen)
++
++# Preloading
++dots_frame_a.preload()
++dots_frame_b.preload()
++shapes_frame_a.preload()
++shapes_frame_b.preload()
++fixation_screen.preload()
++instructions_screen.preload()
++response_prompt_screen.preload()
++blank_screen.preload()
++
++# DOTS block and trial construction
++dots_block = xpy.design.Block(name="DOTS")
++dots_block.set_factor("condition", "DOTS")
++for isi_ms in [0, 0, 0, 0, 0, 50, 50, 50, 50, 50, 500, 500, 500, 500, 500, 1000, 1000, 1000, 1000, 1000]:
++    trial = xpy.design.Trial()
++    trial.set_factor("isi_ms", isi_ms)
++    dots_block.add_trial(trial)
++
++# Randomization of DOTS trials
++for index in range(len(dots_block.trials) - 1, 0, -1):
++    swap_index = random.randint(0, index)
++    dots_block.trials[index], dots_block.trials[swap_index] = dots_block.trials[swap_index], dots_block.trials[index]
++
++# SHAPES block and trial construction
++shapes_block = xpy.design.Block(name="SHAPES")
++shapes_block.set_factor("condition", "SHAPES")
++for isi_ms in [0, 0, 0, 0, 0, 50, 50, 50, 50, 50, 500, 500, 500, 500, 500, 1000, 1000, 1000, 1000, 1000]:
++    trial = xpy.design.Trial()
++    trial.set_factor("isi_ms", isi_ms)
++    shapes_block.add_trial(trial)
++
++# Randomization of SHAPES trials
++for index in range(len(shapes_block.trials) - 1, 0, -1):
++    swap_index = random.randint(0, index)
++    shapes_block.trials[index], shapes_block.trials[swap_index] = shapes_block.trials[swap_index], shapes_block.trials[index]
++
++# Stimuli for DOTS trials
++for trial in dots_block.trials:
++    trial.add_stimulus(dots_frame_a)
++    trial.add_stimulus(dots_frame_b)
++    trial.add_stimulus(fixation_screen)
++    trial.add_stimulus(response_prompt_screen)
++    trial.add_stimulus(fixation_screen)
++    trial.add_stimulus(blank_screen)
++
++# Stimuli for SHAPES trials
++for trial in shapes_block.trials:
++    trial.add_stimulus(shapes_frame_a)
++    trial.add_stimulus(shapes_frame_b)
++    trial.add_stimulus(fixation_screen)
++    trial.add_stimulus(response_prompt_screen)
++    trial.add_stimulus(fixation_screen)
++    trial.add_stimulus(blank_screen)
++
++# Experiment start
++experiment.add_block(dots_block)
++experiment.add_block(shapes_block)
++xpy.control.start(skip_ready_screen=True)
++
++# Counterbalancing
++if experiment.subject % 2 == 0:
++    experiment.blocks.reverse()
++
++# Instructions
++instructions_screen.present()
++experiment.keyboard.wait(keys=[xpy.misc.constants.K_SPACE])
++
++# Trial presentation
++for block in experiment.blocks:
++    for trial in block.trials:
++        isi_ms = trial.get_factor("isi_ms")
++        trial.stimuli[2].present()
++        experiment.clock.wait(200)
++
++        for repetition in range(3):
++            trial.stimuli[0].present()
++            experiment.clock.wait(250)
++            if isi_ms > 0:
++                trial.stimuli[4].present()
++                experiment.clock.wait(isi_ms)
++
++            trial.stimuli[1].present()
++            experiment.clock.wait(250)
++            if isi_ms > 0:
++                trial.stimuli[4].present()
++                experiment.clock.wait(isi_ms)
++
++        # Response collection
++        trial.stimuli[3].present()
++        key, rt_ms = experiment.keyboard.wait(keys=[xpy.misc.constants.K_LEFT, xpy.misc.constants.K_RIGHT])
++
++        if key == xpy.misc.constants.K_LEFT:
++            response_label = "element"
++            group_response = 0
++        else:
++            response_label = "group"
++            group_response = 1
++
++        # Intertrial interval
++        trial.stimuli[5].present()
++        experiment.clock.wait(500)
++        # Data saving
++        experiment.data.add([block.get_factor("condition"), trial.id, isi_ms, 250, response_label, group_response, key, rt_ms])
++        experiment.data.save()
++
++# Experiment end
+ xpy.control.end()
+\ No newline at end of file
+
+commit 926d4147c8c67befae512edcef4fc4ce917e869b
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Thu Oct 29 16:57:05 2026 +0100
+
+    Rename images for more intuitve understanding prinicple 4
+---
+ session-03/Ternus.py | 56 ++++++++++++++++++++++++++--------------------------
+ 1 file changed, 28 insertions(+), 28 deletions(-)
+
+diff --git a/session-03/Ternus.py b/session-03/Ternus.py
+index ed084b3..c49a899 100644
+--- a/session-03/Ternus.py
++++ b/session-03/Ternus.py
+@@ -8,26 +8,26 @@ xpy.control.initialize(experiment)
+ 
+ # DOTS stimuli
+ list1 = []
+-dots_frame_a = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
+-xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(dots_frame_a)
+-xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(dots_frame_a)
+-xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(dots_frame_a)
++dots_first_image = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
++xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(dots_first_image)
++xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(dots_first_image)
++xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(dots_first_image)
+ 
+-dots_frame_b = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
+-xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(dots_frame_b)
+-xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(dots_frame_b)
+-xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(dots_frame_b)
++dots_second_image = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
++xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(dots_second_image)
++xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(dots_second_image)
++xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(dots_second_image)
+ 
+ # SHAPES stimuli
+-shapes_frame_a = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
+-xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(shapes_frame_a)
+-xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(shapes_frame_a)
+-xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(shapes_frame_a)
++shapes_first_image = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
++xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(shapes_first_image)
++xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(shapes_first_image)
++xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(shapes_first_image)
+ 
+-shapes_frame_b = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
+-xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(shapes_frame_b)
+-xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(shapes_frame_b)
+-xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(shapes_frame_b)
++shapes_second_image = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
++xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(shapes_second_image)
++xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(shapes_second_image)
++xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(shapes_second_image)
+ 
+ # Fixation cross and text screens
+ fixation_cross = xpy.stimuli.FixCross(size=(20, 20), line_width=4, colour=(255, 255, 255))
+@@ -38,18 +38,18 @@ response_prompt_screen = xpy.stimuli.TextScreen(heading="What did you see?", tex
+ blank_screen = xpy.stimuli.BlankScreen(colour=(0, 0, 0))
+ 
+ # Fixation on stimulus and text screens
+-fixation_cross.plot(dots_frame_a)
+-fixation_cross.plot(dots_frame_b)
+-fixation_cross.plot(shapes_frame_a)
+-fixation_cross.plot(shapes_frame_b)
++fixation_cross.plot(dots_first_image)
++fixation_cross.plot(dots_second_image)
++fixation_cross.plot(shapes_first_image)
++fixation_cross.plot(shapes_second_image)
+ fixation_cross.plot(instructions_screen)
+ fixation_cross.plot(response_prompt_screen)
+ 
+ # Preloading
+-dots_frame_a.preload()
+-dots_frame_b.preload()
+-shapes_frame_a.preload()
+-shapes_frame_b.preload()
++dots_first_image.preload()
++dots_second_image.preload()
++shapes_first_image.preload()
++shapes_second_image.preload()
+ fixation_screen.preload()
+ instructions_screen.preload()
+ response_prompt_screen.preload()
+@@ -83,8 +83,8 @@ for index in range(len(shapes_block.trials) - 1, 0, -1):
+ 
+ # Stimuli for DOTS trials
+ for trial in dots_block.trials:
+-    trial.add_stimulus(dots_frame_a)
+-    trial.add_stimulus(dots_frame_b)
++    trial.add_stimulus(dots_first_image)
++    trial.add_stimulus(dots_second_image)
+     trial.add_stimulus(fixation_screen)
+     trial.add_stimulus(response_prompt_screen)
+     trial.add_stimulus(fixation_screen)
+@@ -92,8 +92,8 @@ for trial in dots_block.trials:
+ 
+ # Stimuli for SHAPES trials
+ for trial in shapes_block.trials:
+-    trial.add_stimulus(shapes_frame_a)
+-    trial.add_stimulus(shapes_frame_b)
++    trial.add_stimulus(shapes_first_image)
++    trial.add_stimulus(shapes_second_image)
+     trial.add_stimulus(fixation_screen)
+     trial.add_stimulus(response_prompt_screen)
+     trial.add_stimulus(fixation_screen)
+
+commit 97aad0562da2e18588aaf92fbb5f2caa3cc26db2
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Thu Oct 29 19:44:01 2026 +0100
+
+    Moved configuration data to a separate file
+---
+ session-03/Ternus.py | 55 ++++++++++++++++++++++++++--------------------------
+ session-03/config.py | 40 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 68 insertions(+), 27 deletions(-)
+
+diff --git a/session-03/Ternus.py b/session-03/Ternus.py
+index c49a899..87fd5de 100644
+--- a/session-03/Ternus.py
++++ b/session-03/Ternus.py
+@@ -1,41 +1,42 @@
+ import random
+ import expyriment as xpy
+ 
++import config
++
+ # Experiment initialization
+-experiment = xpy.design.Experiment(name="Ternus experiment", background_colour=(0, 0, 0), foreground_colour=(255, 255, 255))
++experiment = xpy.design.Experiment(name=config.EXPERIMENT_NAME, background_colour=config.BACKGROUND_COLOUR, foreground_colour=config.FOREGROUND_COLOUR)
+ experiment.data_variable_names = ["condition", "trial", "isi_ms", "frame_ms", "response", "group_response", "key", "rt_ms"]
+ xpy.control.initialize(experiment)
+ 
+ # DOTS stimuli
+-list1 = []
+-dots_first_image = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
+-xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(dots_first_image)
+-xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(dots_first_image)
+-xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(dots_first_image)
++dots_first_image = xpy.stimuli.Canvas(size=config.IMAGE_SIZE, colour=config.BACKGROUND_COLOUR)
++xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_LEFT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(dots_first_image)
++xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_CENTER_LEFT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(dots_first_image)
++xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_CENTER_RIGHT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(dots_first_image)
+ 
+-dots_second_image = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
+-xpy.stimuli.Circle(radius=20, position=(-40, -50), colour=(255, 255, 255)).plot(dots_second_image)
+-xpy.stimuli.Circle(radius=20, position=(40, -50), colour=(255, 255, 255)).plot(dots_second_image)
+-xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(dots_second_image)
++dots_second_image = xpy.stimuli.Canvas(size=config.IMAGE_SIZE, colour=config.BACKGROUND_COLOUR)
++xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_CENTER_LEFT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(dots_second_image)
++xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_CENTER_RIGHT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(dots_second_image)
++xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_RIGHT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(dots_second_image)
+ 
+ # SHAPES stimuli
+-shapes_first_image = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
+-xpy.stimuli.Circle(radius=20, position=(-120, -50), colour=(255, 255, 255)).plot(shapes_first_image)
+-xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(shapes_first_image)
+-xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(shapes_first_image)
++shapes_first_image = xpy.stimuli.Canvas(size=config.IMAGE_SIZE, colour=config.BACKGROUND_COLOUR)
++xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_LEFT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(shapes_first_image)
++xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, config.TRIANGLE_RADIUS), position=(config.X_CENTER_LEFT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(shapes_first_image)
++xpy.stimuli.Rectangle(size=config.SQUARE_SIZE, position=(config.X_CENTER_RIGHT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(shapes_first_image)
+ 
+-shapes_second_image = xpy.stimuli.Canvas(size=(600, 300), colour=(0, 0, 0))
+-xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, 54), position=(-40, -50), colour=(255, 255, 255)).plot(shapes_second_image)
+-xpy.stimuli.Rectangle(size=(35, 35), position=(40, -50), colour=(255, 255, 255)).plot(shapes_second_image)
+-xpy.stimuli.Circle(radius=20, position=(120, -50), colour=(255, 255, 255)).plot(shapes_second_image)
++shapes_second_image = xpy.stimuli.Canvas(size=config.IMAGE_SIZE, colour=config.BACKGROUND_COLOUR)
++xpy.stimuli.Shape(vertex_list=xpy.misc.geometry.vertices_regular_polygon(3, config.TRIANGLE_RADIUS), position=(config.X_CENTER_LEFT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(shapes_second_image)
++xpy.stimuli.Rectangle(size=config.SQUARE_SIZE, position=(config.X_CENTER_RIGHT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(shapes_second_image)
++xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_RIGHT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(shapes_second_image)
+ 
+ # Fixation cross and text screens
+-fixation_cross = xpy.stimuli.FixCross(size=(20, 20), line_width=4, colour=(255, 255, 255))
+-fixation_screen = xpy.stimuli.BlankScreen(colour=(0, 0, 0))
++fixation_cross = xpy.stimuli.FixCross(size=config.FIXATION_SIZE, line_width=config.FIXATION_LINE_WIDTH, colour=config.FOREGROUND_COLOUR)
++fixation_screen = xpy.stimuli.BlankScreen(colour=config.BACKGROUND_COLOUR)
+ fixation_cross.plot(fixation_screen)
+ instructions_screen = xpy.stimuli.TextScreen(heading="Ternus experiment", text="Keep your eyes on the central cross.\n\nLEFT = element motion\nRIGHT = group motion\n\nPress SPACE to start.")
+ response_prompt_screen = xpy.stimuli.TextScreen(heading="What did you see?", text="LEFT = element motion\nRIGHT = group motion")
+-blank_screen = xpy.stimuli.BlankScreen(colour=(0, 0, 0))
++blank_screen = xpy.stimuli.BlankScreen(colour=config.BACKGROUND_COLOUR)
+ 
+ # Fixation on stimulus and text screens
+ fixation_cross.plot(dots_first_image)
+@@ -117,17 +118,17 @@ for block in experiment.blocks:
+     for trial in block.trials:
+         isi_ms = trial.get_factor("isi_ms")
+         trial.stimuli[2].present()
+-        experiment.clock.wait(200)
++        experiment.clock.wait(config.FIXATION_BEFORE_TRIAL_MS)
+ 
+-        for repetition in range(3):
++        for repetition in range(config.N_IMAGE_PAIRS):
+             trial.stimuli[0].present()
+-            experiment.clock.wait(250)
++            experiment.clock.wait(config.IMAGE_DURATION_MS)
+             if isi_ms > 0:
+                 trial.stimuli[4].present()
+                 experiment.clock.wait(isi_ms)
+ 
+             trial.stimuli[1].present()
+-            experiment.clock.wait(250)
++            experiment.clock.wait(config.IMAGE_DURATION_MS)
+             if isi_ms > 0:
+                 trial.stimuli[4].present()
+                 experiment.clock.wait(isi_ms)
+@@ -145,9 +146,9 @@ for block in experiment.blocks:
+ 
+         # Intertrial interval
+         trial.stimuli[5].present()
+-        experiment.clock.wait(500)
++        experiment.clock.wait(config.INTERTRIAL_INTERVAL_MS)
+         # Data saving
+-        experiment.data.add([block.get_factor("condition"), trial.id, isi_ms, 250, response_label, group_response, key, rt_ms])
++        experiment.data.add([block.get_factor("condition"), trial.id, isi_ms, config.IMAGE_DURATION_MS, response_label, group_response, key, rt_ms])
+         experiment.data.save()
+ 
+ # Experiment end
+diff --git a/session-03/config.py b/session-03/config.py
+new file mode 100644
+index 0000000..23eb692
+--- /dev/null
++++ b/session-03/config.py
+@@ -0,0 +1,40 @@
++"""Settings for the Ternus experiment.
++
++Everything from Ternus.py, like numbers, colours, sizes, pos... was moved here
++so that the foucs in Ternus py is on the experiment, while this file focuses on 
++figurations
++"""
++
++EXPERIMENT_NAME = "Ternus experiment"
++
++#Colours (RGB)
++BACKGROUND_COLOUR = (0, 0, 0)
++FOREGROUND_COLOUR = (255, 255, 255)
++
++# Size of each image
++IMAGE_SIZE = (600, 300)
++
++#offset pos for the positons of the circles and shapes
++X_LEFT = -120
++X_CENTER_LEFT = -40
++X_CENTER_RIGHT = 40
++X_RIGHT = 120
++Y_ITEMS = -50
++
++
++DOT_RADIUS = 20
++TRIANGLE_RADIUS = 54
++SQUARE_SIZE = (35, 35)
++
++#Fixation cross
++FIXATION_SIZE = (20, 20)
++FIXATION_LINE_WIDTH = 4
++
++# Time in (ms)
++FIXATION_BEFORE_TRIAL_MS = 200
++IMAGE_DURATION_MS = 250
++INTERTRIAL_INTERVAL_MS = 500
++
++#iteration limit for the for loop, how many times are the images shown as a pair
++#on each trial
++N_IMAGE_PAIRS = 3
+
+commit bc438bcba47a83c003984a29fb2ebad03d16bc2f
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Thu Oct 29 20:01:30 2026 +0100
+
+    Build trials with add_trials_full_factorial, move ISI values and trial count to config.py
+    
+    Replaced the hand-typed 20-number ISI lists and the loops that built each
+    trial with Expyriment's add_trials_full_factorial, in both blocks.
+    ISI_VALUES_MS and TRIALS_PER_ISI now live in config.py, so the design
+    (4 ISIs x 5 trials = 20 per block) is stated once instead of typed twice.
+    Roth et al., Principle 4 (DRY, no hard-coded configuration) and
+    Principle 1 (use existing tools).
+---
+ session-03/Ternus.py | 15 ++++++---------
+ session-03/config.py |  4 ++++
+ 2 files changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/session-03/Ternus.py b/session-03/Ternus.py
+index 87fd5de..f250ad4 100644
+--- a/session-03/Ternus.py
++++ b/session-03/Ternus.py
+@@ -3,6 +3,8 @@ import expyriment as xpy
+ 
+ import config
+ 
++#isi = interstimulus interval
++
+ # Experiment initialization
+ experiment = xpy.design.Experiment(name=config.EXPERIMENT_NAME, background_colour=config.BACKGROUND_COLOUR, foreground_colour=config.FOREGROUND_COLOUR)
+ experiment.data_variable_names = ["condition", "trial", "isi_ms", "frame_ms", "response", "group_response", "key", "rt_ms"]
+@@ -59,11 +61,8 @@ blank_screen.preload()
+ # DOTS block and trial construction
+ dots_block = xpy.design.Block(name="DOTS")
+ dots_block.set_factor("condition", "DOTS")
+-for isi_ms in [0, 0, 0, 0, 0, 50, 50, 50, 50, 50, 500, 500, 500, 500, 500, 1000, 1000, 1000, 1000, 1000]:
+-    trial = xpy.design.Trial()
+-    trial.set_factor("isi_ms", isi_ms)
+-    dots_block.add_trial(trial)
+-
++dots_block.add_trials_full_factorial({"isi_ms": config.ISI_VALUES_MS},
++                                     copies=config.TRIALS_PER_ISI)
+ # Randomization of DOTS trials
+ for index in range(len(dots_block.trials) - 1, 0, -1):
+     swap_index = random.randint(0, index)
+@@ -72,10 +71,8 @@ for index in range(len(dots_block.trials) - 1, 0, -1):
+ # SHAPES block and trial construction
+ shapes_block = xpy.design.Block(name="SHAPES")
+ shapes_block.set_factor("condition", "SHAPES")
+-for isi_ms in [0, 0, 0, 0, 0, 50, 50, 50, 50, 50, 500, 500, 500, 500, 500, 1000, 1000, 1000, 1000, 1000]:
+-    trial = xpy.design.Trial()
+-    trial.set_factor("isi_ms", isi_ms)
+-    shapes_block.add_trial(trial)
++shapes_block.add_trials_full_factorial({"isi_ms": config.ISI_VALUES_MS},
++                                     copies=config.TRIALS_PER_ISI)
+ 
+ # Randomization of SHAPES trials
+ for index in range(len(shapes_block.trials) - 1, 0, -1):
+diff --git a/session-03/config.py b/session-03/config.py
+index 23eb692..ae30faa 100644
+--- a/session-03/config.py
++++ b/session-03/config.py
+@@ -38,3 +38,7 @@ INTERTRIAL_INTERVAL_MS = 500
+ #iteration limit for the for loop, how many times are the images shown as a pair
+ #on each trial
+ N_IMAGE_PAIRS = 3
++
++#hard coded data is also moved here to avoid unnecessary for loops
++ISI_VALUES_MS = [0, 50, 500, 1000]
++TRIALS_PER_ISI = 5
+\ No newline at end of file
+
+commit ce299936af71922881b47e398229dd2eff5fac16
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Thu Oct 29 20:08:39 2026 +0100
+
+    Replace swapping done with for loop, wilt a built in function "shuffle_trials"
+---
+ session-03/Ternus.py | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
+
+diff --git a/session-03/Ternus.py b/session-03/Ternus.py
+index f250ad4..e4f9d57 100644
+--- a/session-03/Ternus.py
++++ b/session-03/Ternus.py
+@@ -64,20 +64,15 @@ dots_block.set_factor("condition", "DOTS")
+ dots_block.add_trials_full_factorial({"isi_ms": config.ISI_VALUES_MS},
+                                      copies=config.TRIALS_PER_ISI)
+ # Randomization of DOTS trials
+-for index in range(len(dots_block.trials) - 1, 0, -1):
+-    swap_index = random.randint(0, index)
+-    dots_block.trials[index], dots_block.trials[swap_index] = dots_block.trials[swap_index], dots_block.trials[index]
+-
++dots_block.shuffle_trials()
+ # SHAPES block and trial construction
+ shapes_block = xpy.design.Block(name="SHAPES")
+ shapes_block.set_factor("condition", "SHAPES")
+ shapes_block.add_trials_full_factorial({"isi_ms": config.ISI_VALUES_MS},
+                                      copies=config.TRIALS_PER_ISI)
+ 
+-# Randomization of SHAPES trials
+-for index in range(len(shapes_block.trials) - 1, 0, -1):
+-    swap_index = random.randint(0, index)
+-    shapes_block.trials[index], shapes_block.trials[swap_index] = shapes_block.trials[swap_index], shapes_block.trials[index]
++# Randomization of SHAPES trials, can be done with the built in shuffle fucntipn
++shapes_block.shuffle_trials()
+ 
+ # Stimuli for DOTS trials
+ for trial in dots_block.trials:
+
+commit 10915a725eb89fe469d00a7bdd4aebeb2e324a0c
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Thu Oct 29 20:12:58 2026 +0100
+
+    Avoid duplicate code by using a helper function (DRY principle)
+---
+ session-03/Ternus.py | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
+
+diff --git a/session-03/Ternus.py b/session-03/Ternus.py
+index e4f9d57..3532ff9 100644
+--- a/session-03/Ternus.py
++++ b/session-03/Ternus.py
+@@ -5,11 +5,24 @@ import config
+ 
+ #isi = interstimulus interval
+ 
++
+ # Experiment initialization
+ experiment = xpy.design.Experiment(name=config.EXPERIMENT_NAME, background_colour=config.BACKGROUND_COLOUR, foreground_colour=config.FOREGROUND_COLOUR)
+ experiment.data_variable_names = ["condition", "trial", "isi_ms", "frame_ms", "response", "group_response", "key", "rt_ms"]
+ xpy.control.initialize(experiment)
+ 
++#helper function for building blocks
++def create_block(condition):
++    """Build one shuffled block: every ISI in config.ISI_VALUES_MS, TRIALS_PER_ISI times each."""
++    block = xpy.design.Block(name=condition)
++    block.set_factor("condition", condition)
++    block.add_trials_full_factorial({"isi_ms": config.ISI_VALUES_MS},
++                                    copies=config.TRIALS_PER_ISI)
++    block.shuffle_trials()
++    return block
++
++
++
+ # DOTS stimuli
+ dots_first_image = xpy.stimuli.Canvas(size=config.IMAGE_SIZE, colour=config.BACKGROUND_COLOUR)
+ xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_LEFT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(dots_first_image)
+@@ -59,17 +72,11 @@ response_prompt_screen.preload()
+ blank_screen.preload()
+ 
+ # DOTS block and trial construction
+-dots_block = xpy.design.Block(name="DOTS")
+-dots_block.set_factor("condition", "DOTS")
+-dots_block.add_trials_full_factorial({"isi_ms": config.ISI_VALUES_MS},
+-                                     copies=config.TRIALS_PER_ISI)
++dots_block = create_block("DOTS")
+ # Randomization of DOTS trials
+ dots_block.shuffle_trials()
+ # SHAPES block and trial construction
+-shapes_block = xpy.design.Block(name="SHAPES")
+-shapes_block.set_factor("condition", "SHAPES")
+-shapes_block.add_trials_full_factorial({"isi_ms": config.ISI_VALUES_MS},
+-                                     copies=config.TRIALS_PER_ISI)
++shapes_block = create_block("SHAPES")
+ 
+ # Randomization of SHAPES trials, can be done with the built in shuffle fucntipn
+ shapes_block.shuffle_trials()
+
+commit 6ee56e5b87072821ebdd6daa251b8ec1c4e3e6b1
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Thu Oct 29 20:13:22 2026 +0100
+
+    AVoid duplicate code by using a helper function
+---
+ session-03/Ternus.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/session-03/Ternus.py b/session-03/Ternus.py
+index 3532ff9..56facd7 100644
+--- a/session-03/Ternus.py
++++ b/session-03/Ternus.py
+@@ -13,7 +13,7 @@ xpy.control.initialize(experiment)
+ 
+ #helper function for building blocks
+ def create_block(condition):
+-    """Build one shuffled block: every ISI in config.ISI_VALUES_MS, TRIALS_PER_ISI times each."""
++    
+     block = xpy.design.Block(name=condition)
+     block.set_factor("condition", condition)
+     block.add_trials_full_factorial({"isi_ms": config.ISI_VALUES_MS},
+
+commit 4093fd743a568ca689d5bb736aa357dce991bc0e
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Thu Oct 29 20:15:19 2026 +0100
+
+    Add docstring
+---
+ session-03/Ternus.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/session-03/Ternus.py b/session-03/Ternus.py
+index 56facd7..1959e5b 100644
+--- a/session-03/Ternus.py
++++ b/session-03/Ternus.py
+@@ -13,6 +13,7 @@ xpy.control.initialize(experiment)
+ 
+ #helper function for building blocks
+ def create_block(condition):
++    """Build one shuffled block: each ISI in config.ISI_VALUES_MS, TRIALS_PER_ISI times."""
+     
+     block = xpy.design.Block(name=condition)
+     block.set_factor("condition", condition)
+
+commit 5e81f5e429b3be3272360440dbfed29985138fc6
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Thu Oct 29 20:20:06 2026 +0100
+
+    remove unused random import and shuffle is already done in the create_block function
+---
+ session-03/Ternus.py | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
+
+diff --git a/session-03/Ternus.py b/session-03/Ternus.py
+index 1959e5b..a24c7c2 100644
+--- a/session-03/Ternus.py
++++ b/session-03/Ternus.py
+@@ -1,4 +1,3 @@
+-import random
+ import expyriment as xpy
+ 
+ import config
+@@ -22,8 +21,6 @@ def create_block(condition):
+     block.shuffle_trials()
+     return block
+ 
+-
+-
+ # DOTS stimuli
+ dots_first_image = xpy.stimuli.Canvas(size=config.IMAGE_SIZE, colour=config.BACKGROUND_COLOUR)
+ xpy.stimuli.Circle(radius=config.DOT_RADIUS, position=(config.X_LEFT, config.Y_ITEMS), colour=config.FOREGROUND_COLOUR).plot(dots_first_image)
+@@ -72,15 +69,11 @@ instructions_screen.preload()
+ response_prompt_screen.preload()
+ blank_screen.preload()
+ 
+-# DOTS block and trial construction
++# DOTS block and trial construction AND SHUFFLE
+ dots_block = create_block("DOTS")
+-# Randomization of DOTS trials
+-dots_block.shuffle_trials()
+ # SHAPES block and trial construction
+ shapes_block = create_block("SHAPES")
+ 
+-# Randomization of SHAPES trials, can be done with the built in shuffle fucntipn
+-shapes_block.shuffle_trials()
+ 
+ # Stimuli for DOTS trials
+ for trial in dots_block.trials:
+
+commit 3dd84672cf9fb866e804fafffa0bbb83a8250436
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Thu Oct 29 20:28:45 2026 +0100
+
+    Present screens by name instead of numbered trial.stimuli
+    
+    Removed the two add_stimulus loops and the trial.stimuli[0..5] indexing.
+    The two images per condition are looked up from a dict, and the fixation,
+    response and blank screens are used by name. Presentation order and timing
+    are unchanged. Roth et al., Principle 4 (descriptive names, DRY, KISS).
+---
+ session-03/Ternus.py | 37 +++++++++++++------------------------
+ 1 file changed, 13 insertions(+), 24 deletions(-)
+
+diff --git a/session-03/Ternus.py b/session-03/Ternus.py
+index a24c7c2..8e4be51 100644
+--- a/session-03/Ternus.py
++++ b/session-03/Ternus.py
+@@ -75,23 +75,11 @@ dots_block = create_block("DOTS")
+ shapes_block = create_block("SHAPES")
+ 
+ 
+-# Stimuli for DOTS trials
+-for trial in dots_block.trials:
+-    trial.add_stimulus(dots_first_image)
+-    trial.add_stimulus(dots_second_image)
+-    trial.add_stimulus(fixation_screen)
+-    trial.add_stimulus(response_prompt_screen)
+-    trial.add_stimulus(fixation_screen)
+-    trial.add_stimulus(blank_screen)
+-
+-# Stimuli for SHAPES trials
+-for trial in shapes_block.trials:
+-    trial.add_stimulus(shapes_first_image)
+-    trial.add_stimulus(shapes_second_image)
+-    trial.add_stimulus(fixation_screen)
+-    trial.add_stimulus(response_prompt_screen)
+-    trial.add_stimulus(fixation_screen)
+-    trial.add_stimulus(blank_screen)
++#The two images that belong to each condition
++images = {
++    "DOTS": (dots_first_image, dots_second_image),
++    "SHAPES": (shapes_first_image, shapes_second_image),
++}
+ 
+ # Experiment start
+ experiment.add_block(dots_block)
+@@ -108,26 +96,27 @@ experiment.keyboard.wait(keys=[xpy.misc.constants.K_SPACE])
+ 
+ # Trial presentation
+ for block in experiment.blocks:
++    first_image, second_image = images[block.get_factor("condition")]
+     for trial in block.trials:
+         isi_ms = trial.get_factor("isi_ms")
+-        trial.stimuli[2].present()
++        fixation_screen.present()
+         experiment.clock.wait(config.FIXATION_BEFORE_TRIAL_MS)
+ 
+         for repetition in range(config.N_IMAGE_PAIRS):
+-            trial.stimuli[0].present()
++            first_image.present()
+             experiment.clock.wait(config.IMAGE_DURATION_MS)
+             if isi_ms > 0:
+-                trial.stimuli[4].present()
++                fixation_screen.present()
+                 experiment.clock.wait(isi_ms)
+ 
+-            trial.stimuli[1].present()
++            second_image.present()
+             experiment.clock.wait(config.IMAGE_DURATION_MS)
+             if isi_ms > 0:
+-                trial.stimuli[4].present()
++                fixation_screen.present()
+                 experiment.clock.wait(isi_ms)
+ 
+         # Response collection
+-        trial.stimuli[3].present()
++        response_prompt_screen.present()
+         key, rt_ms = experiment.keyboard.wait(keys=[xpy.misc.constants.K_LEFT, xpy.misc.constants.K_RIGHT])
+ 
+         if key == xpy.misc.constants.K_LEFT:
+@@ -138,7 +127,7 @@ for block in experiment.blocks:
+             group_response = 1
+ 
+         # Intertrial interval
+-        trial.stimuli[5].present()
++        blank_screen.present()
+         experiment.clock.wait(config.INTERTRIAL_INTERVAL_MS)
+         # Data saving
+         experiment.data.add([block.get_factor("condition"), trial.id, isi_ms, config.IMAGE_DURATION_MS, response_label, group_response, key, rt_ms])
+
+commit af61057ea0c3882982173ed4b6589e1d837ec295
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Thu Oct 29 21:41:50 2026 +0100
+
+    Add trial tracking number
+---
+ session-03/Ternus.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/session-03/Ternus.py b/session-03/Ternus.py
+index 8e4be51..82cf88b 100644
+--- a/session-03/Ternus.py
++++ b/session-03/Ternus.py
+@@ -95,9 +95,11 @@ instructions_screen.present()
+ experiment.keyboard.wait(keys=[xpy.misc.constants.K_SPACE])
+ 
+ # Trial presentation
++trial_number = 0  # position in the whole run (1-40), in the order the trials are shown
+ for block in experiment.blocks:
+     first_image, second_image = images[block.get_factor("condition")]
+     for trial in block.trials:
++        trial_number += 1
+         isi_ms = trial.get_factor("isi_ms")
+         fixation_screen.present()
+         experiment.clock.wait(config.FIXATION_BEFORE_TRIAL_MS)
+@@ -130,7 +132,7 @@ for block in experiment.blocks:
+         blank_screen.present()
+         experiment.clock.wait(config.INTERTRIAL_INTERVAL_MS)
+         # Data saving
+-        experiment.data.add([block.get_factor("condition"), trial.id, isi_ms, config.IMAGE_DURATION_MS, response_label, group_response, key, rt_ms])
++        experiment.data.add([block.get_factor("condition"), trial_number, isi_ms, config.IMAGE_DURATION_MS, response_label, group_response, key, rt_ms])
+         experiment.data.save()
+ 
+ # Experiment end
+
+commit d7c555e9fa05b1f6703a81313d46bf0de1b66e54
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Thu Oct 29 21:44:25 2026 +0100
+
+    Code responses with a lookup table and reject unexpected keys
+---
+ session-03/Ternus.py | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/session-03/Ternus.py b/session-03/Ternus.py
+index 82cf88b..707920d 100644
+--- a/session-03/Ternus.py
++++ b/session-03/Ternus.py
+@@ -10,6 +10,12 @@ experiment = xpy.design.Experiment(name=config.EXPERIMENT_NAME, background_colou
+ experiment.data_variable_names = ["condition", "trial", "isi_ms", "frame_ms", "response", "group_response", "key", "rt_ms"]
+ xpy.control.initialize(experiment)
+ 
++# How each response key is coded in the data: key -> (response label, number)
++RESPONSES = {
++    xpy.misc.constants.K_LEFT: ("element", 0),
++    xpy.misc.constants.K_RIGHT: ("group", 1),
++}
++
+ #helper function for building blocks
+ def create_block(condition):
+     """Build one shuffled block: each ISI in config.ISI_VALUES_MS, TRIALS_PER_ISI times."""
+@@ -119,14 +125,12 @@ for block in experiment.blocks:
+ 
+         # Response collection
+         response_prompt_screen.present()
+-        key, rt_ms = experiment.keyboard.wait(keys=[xpy.misc.constants.K_LEFT, xpy.misc.constants.K_RIGHT])
+-
+-        if key == xpy.misc.constants.K_LEFT:
+-            response_label = "element"
+-            group_response = 0
+-        else:
+-            response_label = "group"
+-            group_response = 1
++        key, rt_ms = experiment.keyboard.wait(keys=list(RESPONSES))
++
++        # Stop instead of saving a wrong row if anything other than LEFT/RIGHT comes back
++        if key not in RESPONSES:
++            raise ValueError(f"Unexpected response {key!r} on trial {trial_number}: expected LEFT or RIGHT")
++        response_label, group_response = RESPONSES[key]
+ 
+         # Intertrial interval
+         blank_screen.present()
+
+commit ab5e66c1ea70c45bd32d6c1f5bf12de72150f9ef
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Thu Oct 29 21:51:10 2026 +0100
+
+    Show response prompt again if the quit question is declined (n), fixed keyboard error behaviour
+---
+ session-03/Ternus.py | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/session-03/Ternus.py b/session-03/Ternus.py
+index 707920d..e9fc431 100644
+--- a/session-03/Ternus.py
++++ b/session-03/Ternus.py
+@@ -124,12 +124,12 @@ for block in experiment.blocks:
+                 experiment.clock.wait(isi_ms)
+ 
+         # Response collection
+-        response_prompt_screen.present()
+-        key, rt_ms = experiment.keyboard.wait(keys=list(RESPONSES))
+-
+-        # Stop instead of saving a wrong row if anything other than LEFT/RIGHT comes back
+-        if key not in RESPONSES:
+-            raise ValueError(f"Unexpected response {key!r} on trial {trial_number}: expected LEFT or RIGHT")
++        # Pressing Esc and answering "n" to the quit question ends the wait without a key.
++        # Show the prompt again until LEFT or RIGHT is pressed, so no row is saved without a response.
++        key = None
++        while key not in RESPONSES:
++            response_prompt_screen.present()
++            key, rt_ms = experiment.keyboard.wait(keys=list(RESPONSES))
+         response_label, group_response = RESPONSES[key]
+ 
+         # Intertrial interval
+
+commit fd5703950fd816a5c74372ae60718a6e989bff7a
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Tue Nov 3 20:33:49 2026 +0100
+
+    Add check_data.py to verify the saved data against the design
+---
+ session-03/check_data.py | 175 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 175 insertions(+)
+
+diff --git a/session-03/check_data.py b/session-03/check_data.py
+new file mode 100644
+index 0000000..96f65b1
+--- /dev/null
++++ b/session-03/check_data.py
+@@ -0,0 +1,175 @@
++"""Check a Ternus data file (.xpd) against the design described in Auxiliary.txt.
++
++Usage (from the session-03 folder, with the class Python environment):
++    python check_data.py                  # checks the newest file in data/
++    python check_data.py data/FILE.xpd    # checks a specific file
++
++It checks that the file is complete and consistent: number of rows, trials per
++condition and ISI, response coding, block order and trial numbering. It cannot
++prove that what appeared on screen matched what was saved, because the file
++only holds what the program wrote down.
++
++The expected numbers come from config.py, so a short test run (fewer trials per
++ISI in config.py) is checked against its own design.
++"""
++import csv
++import glob
++import os
++import sys
++from collections import Counter
++
++from expyriment.misc import constants
++
++import config
++
++CONDITIONS = ("DOTS", "SHAPES")
++
++EXPECTED_COLUMNS = ["subject_id", "condition", "trial", "isi_ms", "frame_ms",
++                    "response", "group_response", "key", "rt_ms"]
++
++# Written out here on purpose, separately from Ternus.py, so that this check
++# does not simply repeat whatever the experiment does.
++# raw key code -> (response, group_response) as saved in the file
++EXPECTED_CODING = {
++    str(constants.K_LEFT): ("element", "0"),
++    str(constants.K_RIGHT): ("group", "1"),
++}
++
++
++def read_xpd(path):
++    """Return the column names and the data rows (as dictionaries) of an .xpd file."""
++    with open(path, newline="") as file:
++        lines = [line for line in file if not line.startswith("#")]
++    reader = csv.DictReader(lines)
++    return reader.fieldnames, list(reader)
++
++
++def check_columns(fieldnames, rows):
++    if fieldnames == EXPECTED_COLUMNS:
++        return []
++    return [f"columns are {fieldnames}, expected {EXPECTED_COLUMNS}"]
++
++
++def check_row_count(fieldnames, rows):
++    expected = len(CONDITIONS) * len(config.ISI_VALUES_MS) * config.TRIALS_PER_ISI
++    if len(rows) == expected:
++        return []
++    return [f"{len(rows)} rows, expected {expected}"]
++
++
++def check_trials_per_condition_and_isi(fieldnames, rows):
++    problems = []
++    counts = Counter((row["condition"], row["isi_ms"]) for row in rows)
++    expected_cells = {(c, str(isi)) for c in CONDITIONS for isi in config.ISI_VALUES_MS}
++    for condition, isi in sorted(expected_cells):
++        found = counts[(condition, isi)]
++        if found != config.TRIALS_PER_ISI:
++            problems.append(f"{condition} at ISI {isi}: {found} rows, expected {config.TRIALS_PER_ISI}")
++    for condition, isi in sorted(set(counts) - expected_cells):
++        problems.append(f"unexpected combination: condition {condition!r}, ISI {isi!r}")
++    return problems
++
++
++def check_block_order(fieldnames, rows):
++    """Odd participant numbers do DOTS first, even numbers SHAPES first, one unbroken block each."""
++    subject = int(rows[0]["subject_id"])
++    expected_first = "DOTS" if subject % 2 == 1 else "SHAPES"
++    expected = [expected_first] + [c for c in CONDITIONS if c != expected_first]
++    blocks = []
++    for row in rows:
++        if not blocks or blocks[-1] != row["condition"]:
++            blocks.append(row["condition"])
++    if blocks == expected:
++        return []
++    return [f"participant {subject}: blocks appear as {blocks}, expected {expected}"]
++
++
++def check_trial_numbers(fieldnames, rows):
++    found = [row["trial"] for row in rows]
++    expected = [str(number) for number in range(1, len(rows) + 1)]
++    if found == expected:
++        return []
++    return [f"trial column is {found[:8]}..., expected 1, 2, 3, ... in order"]
++
++
++def check_frame_duration(fieldnames, rows):
++    bad = [row["trial"] for row in rows if row["frame_ms"] != str(config.IMAGE_DURATION_MS)]
++    if not bad:
++        return []
++    return [f"frame_ms differs from config.IMAGE_DURATION_MS ({config.IMAGE_DURATION_MS}) on trials {bad[:8]}"]
++
++
++def check_response_coding(fieldnames, rows):
++    """LEFT must be saved as element/0 and RIGHT as group/1."""
++    problems = []
++    for row in rows:
++        coding = EXPECTED_CODING.get(row["key"])
++        if coding is None:
++            problems.append(f"trial {row['trial']}: key {row['key']!r} is neither LEFT nor RIGHT")
++        elif (row["response"], row["group_response"]) != coding:
++            problems.append(f"trial {row['trial']}: key {row['key']} saved as "
++                            f"{row['response']}/{row['group_response']}, expected {coding[0]}/{coding[1]}")
++    return problems
++
++
++def check_reaction_times(fieldnames, rows):
++    bad = [row["trial"] for row in rows if not (row["rt_ms"].isdigit() and int(row["rt_ms"]) > 0)]
++    if not bad:
++        return []
++    return [f"missing or invalid rt_ms on trials {bad[:8]}"]
++
++
++def check_single_participant(fieldnames, rows):
++    ids = sorted({row["subject_id"] for row in rows})
++    if len(ids) == 1:
++        return []
++    return [f"rows from several participants: {ids}"]
++
++
++CHECKS = [
++    ("columns are the expected ones", check_columns),
++    ("number of rows matches the design", check_row_count),
++    ("trials per condition and ISI", check_trials_per_condition_and_isi),
++    ("one participant", check_single_participant),
++    ("block order follows the participant number", check_block_order),
++    ("trial numbers are 1, 2, 3, ... in order", check_trial_numbers),
++    ("frame_ms matches config.py", check_frame_duration),
++    ("LEFT = element/0, RIGHT = group/1", check_response_coding),
++    ("reaction times are present", check_reaction_times),
++]
++
++
++def run_checks(fieldnames, rows):
++    """Run all checks and return a list of (description, problems)."""
++    if not rows:
++        return [("file contains data rows", ["no data rows found"])]
++    return [(description, check(fieldnames, rows)) for description, check in CHECKS]
++
++
++def main(argv):
++    if len(argv) > 1:
++        path = argv[1]
++    else:
++        files = glob.glob(os.path.join("data", "*.xpd"))
++        if not files:
++            print("No .xpd files found in data/. Pass a file name as an argument.")
++            return 2
++        path = max(files, key=os.path.getmtime)
++    print(f"Checking {path}")
++
++    fieldnames, rows = read_xpd(path)
++    results = run_checks(fieldnames, rows)
++    for description, problems in results:
++        print(f"{'PASS' if not problems else 'FAIL'}  {description}")
++        for problem in problems[:5]:
++            print(f"        - {problem}")
++        if len(problems) > 5:
++            print(f"        - ... and {len(problems) - 5} more")
++
++    failed = sum(1 for _, problems in results if problems)
++    print("All checks passed." if failed == 0 else f"{failed} check(s) failed.")
++    return 0 if failed == 0 else 1
++
++
++if __name__ == "__main__":
++    sys.exit(main(sys.argv))
+
+commit 0ed524dc22ae433aeb42f8224c3fc5915084cad9
+Author: ena.zoric <ena.zoric@icloud.com>
+Date:   Tue Nov 3 20:43:05 2026 +0100
+
+    Final run file
+---
+ session-03/final_run/Ternus_010_202611032035.xpd | 61 ++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+
+diff --git a/session-03/final_run/Ternus_010_202611032035.xpd b/session-03/final_run/Ternus_010_202611032035.xpd
+new file mode 100644
+index 0000000..3d0840a
+--- /dev/null
++++ b/session-03/final_run/Ternus_010_202611032035.xpd
+@@ -0,0 +1,61 @@
++#Expyriment 1.0.1 (Python 3.13.2), .xpd-file, coding: UTF-8
++#date: Tue Nov 03 2026 20:35:31
++#--EXPERIMENT INFO
++#e mainfile: Ternus.py
++#e sha1: a12501
++#e modules: config.py (f9a991)
++#e Experiment: Ternus experiment
++#e no between subject factors
++#e Block 0: DOTS
++#e     block factors: condition = DOTS
++#e     n trials: 20
++#e     trial factors: isi_ms = [0, 1000, 50, 500]
++#e                    
++#e Block 1: SHAPES
++#e     block factors: condition = SHAPES
++#e     n trials: 20
++#e     trial factors: isi_ms = [0, 1000, 50, 500]
++#e                    
++#--SUBJECT INFO
++#s id: 10
++subject_id,condition,trial,isi_ms,frame_ms,response,group_response,key,rt_ms
++10,SHAPES,1,50,250,group,1,1073741903,910
++10,SHAPES,2,1000,250,group,1,1073741903,458
++10,SHAPES,3,0,250,element,0,1073741904,408
++10,SHAPES,4,500,250,group,1,1073741903,1881
++10,SHAPES,5,1000,250,group,1,1073741903,466
++10,SHAPES,6,50,250,group,1,1073741903,530
++10,SHAPES,7,1000,250,group,1,1073741903,1342
++10,SHAPES,8,1000,250,group,1,1073741903,923
++10,SHAPES,9,500,250,group,1,1073741903,485
++10,SHAPES,10,0,250,element,0,1073741904,957
++10,SHAPES,11,0,250,element,0,1073741904,484
++10,SHAPES,12,1000,250,group,1,1073741903,1287
++10,SHAPES,13,50,250,group,1,1073741903,429
++10,SHAPES,14,500,250,group,1,1073741903,468
++10,SHAPES,15,500,250,group,1,1073741903,418
++10,SHAPES,16,50,250,group,1,1073741903,811
++10,SHAPES,17,0,250,element,0,1073741904,921
++10,SHAPES,18,0,250,element,0,1073741904,452
++10,SHAPES,19,50,250,group,1,1073741903,495
++10,SHAPES,20,500,250,group,1,1073741903,550
++10,DOTS,21,0,250,element,0,1073741904,440
++10,DOTS,22,50,250,group,1,1073741903,994
++10,DOTS,23,0,250,element,0,1073741904,443
++10,DOTS,24,0,250,element,0,1073741904,399
++10,DOTS,25,0,250,element,0,1073741904,397
++10,DOTS,26,50,250,group,1,1073741903,405
++10,DOTS,27,1000,250,group,1,1073741903,446
++10,DOTS,28,50,250,group,1,1073741903,677
++10,DOTS,29,1000,250,group,1,1073741903,369
++10,DOTS,30,1000,250,group,1,1073741903,6863
++10,DOTS,31,1000,250,group,1,1073741903,1394
++10,DOTS,32,50,250,group,1,1073741903,445
++10,DOTS,33,500,250,group,1,1073741903,507
++10,DOTS,34,500,250,group,1,1073741903,401
++10,DOTS,35,50,250,group,1,1073741903,500
++10,DOTS,36,500,250,group,1,1073741903,497
++10,DOTS,37,0,250,element,0,1073741904,434
++10,DOTS,38,500,250,group,1,1073741903,468
++10,DOTS,39,500,250,group,1,1073741903,457
++10,DOTS,40,1000,250,group,1,1073741903,484
