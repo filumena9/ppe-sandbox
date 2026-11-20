@@ -1,0 +1,11 @@
+body {
+  background-color: #111;   /* dark, so yellow stays readable */
+  color: #ddd;              /* default text colour */
+  font-family: Arial, sans-serif;
+}
+
+.red    { color: #ff3b30; }
+.green  { color: #34c759; }
+.blue   { color: #3b82f6; }
+.yellow { color: #ffd60a; }
+
