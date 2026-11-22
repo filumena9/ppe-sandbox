@@ -1,9 +1,9 @@
 var jsPsych = initJsPsych();
 var timeline = [];
 
-var CONGRUENT_REPEATS = 3;       //4 congruent pairs x3 = 12 to match the 12 incongruent pairss
-var SETS_OF_TRIALS = 1;          //how many times the full 24-trial list is run
-var FIXATION_DURATION_MS = 500;
+var CONGRUENT_REPEATS = 3;       //4 congruent pairs x3 = 12 to match the 12 incongruent pairss    //how many times the full 24-trial list is run
+var FIXATION_DURATION_MS = 1000;
+var stroop_trial_number = 0;
 
 var welcome = {
   type: jsPsychHtmlKeyboardResponse,
@@ -54,7 +54,7 @@ var fixation = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: '<div style="font-size:60px;">+</div>',
   choices: "NO_KEYS",
-  trial_duration: 1000,
+  trial_duration: FIXATION_DURATION_MS,
 };
 
 var test_trial = {
@@ -127,19 +127,67 @@ var stroop_trial = {
     ink: jsPsych.timelineVariable('ink'),
     condition: jsPsych.timelineVariable('condition'),
     correct_key: jsPsych.timelineVariable('correct_key')
-  }
+  },
+  on_finish: function(data) {
+  //data.correct = data.response === data.correct_key; be careul this doesn't work
+  data.correct = jsPsych.pluginAPI.compareKeys(data.response, data.correct_key);
+  stroop_trial_number++;
+  data.trial_number = stroop_trial_number;
+}
 };
 
 var stroop_procedure = {
-  timeline: [stroop_trial],
+  timeline: [fixation,stroop_trial],
   timeline_variables: trial_list,
   randomize_order: true
 };
+
+var results_screen = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: function () {
+    
+    var stroop_data = jsPsych.data.get().filter({task: 'stroop'});
+
+    var total_trials = stroop_data.count();
+
+    var correct_trials = stroop_data.filter({correct: true}).count();
+
+    var accuracy = (correct_trials / total_trials) * 100;
+    return `
+      <h2>Experiment complete!</h2>
+      <p>You answered ${correct_trials} out of ${total_trials} correctly.</p>
+      <p>Your accuracy was ${accuracy.toFixed(1)}%.</p>
+      <button id="download-button">Download results (CSV)</button>
+    `;
+  },
+  choices: 'NO_KEYS',
+  data: { task: 'results' },
+  on_load: function () {
+    document.getElementById('download-button').addEventListener('click', function () {
+      jsPsych.data.get()
+        .filter({ task: 'stroop' })
+        .filterColumns([
+            'trial_number',
+            'word',
+            'ink',
+            'condition',
+            'correct_key',
+            'response',
+            'correct',
+            'rt'
+            ])
+        .localSave('csv', 'stroop_results.csv');
+    });
+  }
+};
+
+
+
 
 timeline.push(welcome);
 timeline.push(instructions);
 //timeline.push(test_trial);
 timeline.push(stroop_procedure);
+timeline.push(results_screen);
 jsPsych.run(timeline);
-
 
