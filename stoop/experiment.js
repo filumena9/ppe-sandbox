@@ -1,9 +1,13 @@
 var jsPsych = initJsPsych();
 var timeline = [];
 
+var CONGRUENT_REPEATS = 3;       //4 congruent pairs x3 = 12 to match the 12 incongruent pairss
+var SETS_OF_TRIALS = 1;          //how many times the full 24-trial list is run
+var FIXATION_DURATION_MS = 500;
+
 var welcome = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: "Welcome to the Stoop Task experiment. Press any key to begin."
+  stimulus: "Welcome to the Stroop Task experiment. Press any key to begin."
 };
 
 var mapping_legend_instructions = `
@@ -36,19 +40,106 @@ var instructions = {
     <p>Respond as quickly and as accurately as you can.</p>
     <p>Press any key to begin.</p>
   `,
-  post_trial_gap: 2000
+};
+
+var colours = [
+  { name: 'RED',    ink: 'red',    key: 'r' },
+  { name: 'GREEN',  ink: 'green',  key: 'g' },
+  { name: 'BLUE',   ink: 'blue',   key: 'b' },
+  { name: 'YELLOW', ink: 'yellow', key: 'y' }
+];
+
+
+var fixation = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: '<div style="font-size:60px;">+</div>',
+  choices: "NO_KEYS",
+  trial_duration: 1000,
 };
 
 var test_trial = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: '<p class="stimulus blue">RED</p>',  
+  stimulus: '<p class="stroop-word blue">RED</p>',  
   choices: ['r', 'g', 'b', 'y'],                 
   prompt: mapping_legend                         
 };
 
+//create congurent trials
+var congruent_trials = [];
+
+for (var colour of colours) {
+    congruent_trials.push({
+        word: colour.name,
+        ink: colour.ink,
+        condition: 'congruent',
+        correct_key: colour.key
+    });
+}
+
+
+
+//congruent_trials = 3 * congruent_trials we can't do this in js
+congruent_trials = congruent_trials.flatMap(trial =>
+  Array(CONGRUENT_REPEATS).fill(trial)
+);
+
+console.log(congruent_trials)
+console.log(congruent_trials.length)
+
+var incongruent_trials = [];
+
+for (var word_colour of colours) {
+    //to not have duplicate of what we have in congruent trials
+  for (var ink_colour of colours) {
+    if (word_colour.name !== ink_colour.name) {
+      incongruent_trials.push({
+        word: word_colour.name,
+        ink: ink_colour.ink,
+        condition: 'incongruent',
+        correct_key: ink_colour.key    
+      });
+    }
+  }
+}
+
+
+console.log(incongruent_trials)
+console.log(incongruent_trials.length)
+
+var trial_list = congruent_trials.concat(incongruent_trials);
+console.log(trial_list.length);  
+
+var stroop_trial = {
+  type: jsPsychHtmlKeyboardResponse,
+
+  stimulus: function() {
+    var word = jsPsych.evaluateTimelineVariable('word');
+    var ink = jsPsych.evaluateTimelineVariable('ink');
+
+    return `<p class="stroop-word ${ink}">${word}</p>`;
+  },
+
+  choices: ['r', 'g', 'b', 'y'],
+  prompt: mapping_legend,
+  data: {
+    task: 'stroop',
+    word: jsPsych.timelineVariable('word'),
+    ink: jsPsych.timelineVariable('ink'),
+    condition: jsPsych.timelineVariable('condition'),
+    correct_key: jsPsych.timelineVariable('correct_key')
+  }
+};
+
+var stroop_procedure = {
+  timeline: [stroop_trial],
+  timeline_variables: trial_list,
+  randomize_order: true
+};
+
 timeline.push(welcome);
 timeline.push(instructions);
-timeline.push(test_trial);
+//timeline.push(test_trial);
+timeline.push(stroop_procedure);
 jsPsych.run(timeline);
 
 

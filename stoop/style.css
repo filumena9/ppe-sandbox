@@ -20,3 +20,7 @@ body {
 .blue   { color: #3b82f6; }
 .yellow { color: #ffd60a; }
 
+.stroop-word {
+    font-size: 80px;
+    font-weight: bold;
+}
